@@ -1,0 +1,44 @@
+/*
+Find the total area covered by two rectilinear rectangles in a 2D plane.
+Each rectangle is defined by its bottom left corner and top right corner as shown in the figure.
+*/
+
+class Solution {
+public:
+    int computeArea(int A, int B, int C, int D, int E, int F, int G, int H) {
+        int rec1_area = (C-A) * (D-B);
+        int rec2_area = (G-E) * (H-F);
+        int total = rec1_area + rec2_area;
+        int x, y;
+        if(E >= C) x = 0;
+        else if(E >= A){
+            if(G <= C)  x = G - E;
+            else x = C - E;
+        }
+        
+        else{
+            if(G <= A)  x = 0;
+            else if(G <= C) x = G - A;
+            else x = C - A;
+        }
+        
+        
+        if(F >= D) y = 0;
+        else if(F >= B){
+            if(H <= D)  y = H - F;
+            else y = D - F;
+        }
+        
+        else{
+            if(H <= B)  y = 0;
+            else if(H <= D) y = H - B;
+            else y = D - B;
+        }
+        
+        int overlap_area = x * y;
+        total -= overlap_area;
+        
+        return total;
+        
+    }
+};
