@@ -1,3 +1,8 @@
+/* basic concept:
+inorder: left, root, right
+preorder: root, left, right
+postorder: left, right, root
+*/
 
 /*
 Given inorder and postorder traversal of a tree, construct the binary tree.
