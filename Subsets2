@@ -1,0 +1,53 @@
+//there should be faster solution to solve this duplicate problem
+
+/*
+Given a collection of integers that might contain duplicates, nums, return all possible subsets.
+
+Note:
+Elements in a subset must be in non-descending order.
+The solution set must not contain duplicate subsets.
+For example,
+If nums = [1,2,2], a solution is:
+
+[
+  [2],
+  [1],
+  [1,2,2],
+  [2,2],
+  [1,2],
+  []
+]
+*/
+
+class Solution {
+public:
+    void add(vector<vector<int>>& result, vector<int> subset, int count, vector<int>& nums){
+        if(count == 0) {
+            if(std::find(result.begin(), result.end(), subset) == result.end())
+                result.push_back(subset); 
+            return; 
+        }
+        
+        vector<int> subset1 = subset;
+        vector<int> subset2 = subset;   subset2.push_back(nums[count-1]);
+        add(result, subset1, count - 1, nums);
+        add(result, subset2, count - 1, nums);
+    }
+
+    vector<vector<int>> subsetsWithDup(vector<int>& nums) {
+        vector<vector<int>> result;
+        int size = nums.size();
+        if(size == 0){
+            vector<int> tmp;
+            result.push_back(tmp);
+            return result;
+        }
+        
+        std::sort(nums.begin(), nums.end());
+        std::reverse(nums.begin(), nums.end());
+        vector<int> subset;
+        add(result, subset, size, nums);
+        
+        return result;
+    }
+};
