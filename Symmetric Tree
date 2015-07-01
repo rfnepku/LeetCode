@@ -1,0 +1,47 @@
+/*
+Given a binary tree, check whether it is a mirror of itself (ie, symmetric around its center).
+
+For example, this binary tree is symmetric:
+
+    1
+   / \
+  2   2
+ / \ / \
+3  4 4  3
+But the following is not:
+    1
+   / \
+  2   2
+   \   \
+   3    3
+Note:
+Bonus points if you could solve it both recursively and iteratively.
+*/
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    bool helper(TreeNode* left_node, TreeNode* right_node){
+        if(left_node == NULL && right_node == NULL)   return true;
+        if(left_node != NULL && right_node == NULL)   return false;
+        if(left_node == NULL && right_node != NULL)   return false;
+        if(left_node->val != right_node->val) return false;
+        
+        bool isSym_1 = helper(left_node->left, right_node->right);
+        bool isSym_2 = helper(left_node->right, right_node->left);
+        return isSym_1 && isSym_2;
+    }
+
+    bool isSymmetric(TreeNode* root) {
+        if(root == NULL)    return true;
+        return helper(root->left, root->right);
+    }
+};
