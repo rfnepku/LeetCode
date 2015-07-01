@@ -1,0 +1,78 @@
+/*
+Given a binary tree, return the inorder traversal of its nodes' values.
+
+For example:
+Given binary tree {1,#,2,3},
+   1
+    \
+     2
+    /
+   3
+return [1,3,2].
+
+Note: Recursive solution is trivial, could you do it iteratively?
+*/
+
+//solution 1: recursion
+//solution 2: iteration
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+ 
+class Solution {
+public:
+    void addNode(vector<int>& result, TreeNode* root){
+        if(root == NULL) return;
+        addNode(result, root->left);
+        result.push_back(root->val);
+        addNode(result, root->right);
+    }
+
+    vector<int> inorderTraversal(TreeNode* root) {
+        vector<int> result;
+        addNode(result, root);
+        return result;
+    }
+};
+
+class Solution {
+public:
+    vector<int> inorderTraversal(TreeNode* root) {
+        vector<int> result;
+        
+        if(root == NULL)    return result;
+        
+        //stack<int> mystack;
+        stack<TreeNode*> mystack;
+
+        bool done = false;
+        TreeNode* current = root;
+        
+        while(!done){
+            while(current != NULL){
+                mystack.push(current);  //push node pointer into stack, not value
+                current = current->left;
+            }
+            
+            if(!mystack.empty()){
+                current = mystack.top();
+                result.push_back(mystack.top()->val);
+                mystack.pop();
+                current = current->right;    
+            }
+            
+            else{
+                done = true;
+            }
+            
+        }
+     
+        return result;   
+    }
+};
