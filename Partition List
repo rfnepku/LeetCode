@@ -1,0 +1,50 @@
+//pointer position illustration:
+//    ptr --> put new node here --> ptr_fixed --> 
+//                                       ptr1 --> ptr2 ....
+// create a dummy node, so that both situations can be handled in the same way
+
+class Solution {
+public:
+    ListNode* partition(ListNode* head, int x) {
+        if(head == NULL || head->next == NULL) return head;
+        
+        //find ptr_fixed which firstly has the value no less than x
+        ListNode* ptr_fixed = head;
+        ListNode* ptr;
+        while(ptr_fixed->val < x){
+            ptr = ptr_fixed;
+            ptr_fixed = ptr_fixed->next;
+            if(ptr_fixed == NULL) break;
+        }
+        if(ptr_fixed == NULL || ptr_fixed->next == NULL)
+            return head;
+            
+        //if head->val >= x, use ptr as a dummy node
+        ListNode* dummy;
+        if(head->val >= x){
+            ptr = new ListNode(0);
+            ptr->next = head;
+            dummy = ptr;
+        }
+        
+        //begin to iterate through the list
+        ListNode* ptr1 = ptr_fixed;
+        ListNode* ptr2 = ptr1->next; 
+        while(ptr2 != NULL){
+            if(ptr2->val < x){
+                ptr1->next = ptr2->next;
+                ptr2->next = ptr->next;
+                ptr->next = ptr2;
+                ptr = ptr->next;
+                ptr2 = ptr1->next;
+            }
+            else{
+                ptr1 = ptr1->next;
+                ptr2 = ptr2->next;
+            }
+        }
+        
+        if(head->val >= x) return dummy->next;
+        return head;
+    }
+};
