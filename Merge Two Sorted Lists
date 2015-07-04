@@ -1,0 +1,53 @@
+//merge one list into another
+//master list has ptr1, ptr3
+//to be merged list has ptr2
+
+// pointer illustration
+// ptr1 -> ptr3 -> ...
+// ptr2 -> ...
+ 
+ 
+ 
+class Solution {
+public:
+    ListNode* mergeTwoLists(ListNode* l1, ListNode* l2) {
+        if(l1 == NULL) return l2;
+        if(l2 == NULL) return l1;
+        
+        ListNode* head, *ptr1, *ptr2, *ptr3;
+        if(l1->val <= l2->val){
+            head = l1;
+            ptr1 = l1;
+            ptr2 = l2;
+            ptr3 = ptr1->next;
+        }
+        else{
+            head = l2;
+            ptr1 = l2;
+            ptr2 = l1;
+            ptr3 = ptr1->next;
+        }
+        
+        
+        //begin to merge
+        while(ptr3 != NULL && ptr2 != NULL){
+            if(ptr3->val < ptr2->val){
+                ptr1 = ptr1->next;
+                ptr3 = ptr3->next;
+            }
+            else{
+                ListNode* tmp = ptr2;
+                ptr2 = ptr2->next;
+                tmp->next = ptr3;
+                ptr1->next = tmp;
+                ptr1 = ptr1->next;
+            }
+        }
+        
+        if(ptr3 == NULL){
+            ptr1->next = ptr2;
+        }
+        
+        return head;
+    }
+};
