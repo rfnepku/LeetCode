@@ -7,8 +7,39 @@ and all nodes in the last level are as far left as possible. It can have between
 
 
 
+//time exceed: BFS
+class Solution {
+public:
+    int countNodes(TreeNode* root) {
+        int count = 0;
+        if(root == NULL) return 0;
+        queue<TreeNode*> myqueue;
+        myqueue.push(root);
+        count++;
+        
+        while(!myqueue.empty()){
+            TreeNode* node = myqueue.front();
+            if(node->left != NULL){
+                myqueue.push(node->left);
+                count++;
+            }
+            else
+                return count;
+            
+            if(node->right != NULL){
+                myqueue.push(node->right);
+                count++;
+            }
+            else
+                return count;
+            
+            myqueue.pop();
+        }
+    }
+};
 
-// time exceed
+
+// time exceed: recursion
 class Solution {
 public:
     void addNode(TreeNode* root, int& count){
