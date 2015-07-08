@@ -23,3 +23,16 @@ public:
         return false;
     }
 };
+
+
+    bool hasCycle(ListNode *head) {
+        unordered_set<ListNode*> myset;
+        while(head != NULL){
+            if((myset.insert(head)).second){
+                head = head->next;
+            }
+            else
+                return true;
+        }
+        return false;
+    }
