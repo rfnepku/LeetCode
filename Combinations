@@ -21,19 +21,47 @@ If n = 4 and k = 2, a solution is:
 
 class Solution {
 public:
+    vector<vector<int>> combine(int n, int k) {
+        vector<vector<int>> result;
+        if(n < k)   return result;
+        if(k == 0)  return result;
+        if(k == 1){
+            for(int i = 0; i < n; i++){
+                vector<int> tmp;
+                tmp.push_back(i+1);
+                result.push_back(tmp);
+            }
+            return result;
+        }
+        
+        result = combine(n-1, k);
+        vector<vector<int>> sub_result = combine(n-1, k-1);
+        for(int i = 0; i < sub_result.size(); i++){
+            vector<int> tmp = sub_result[i];
+            tmp.push_back(n);
+            result.push_back(tmp);
+        }
+        return result;
+    }
+};
+
+
+//original code, no need for helper function
+class Solution {
+public:
     vector<vector<int>> helper(int n, int k){
         vector<vector<int>> result;
         if(n < k)   return result;
         if(k==0 ) return result;
         
-        /*
+        /*   if use this, when n=2, k=1 the answer will lose {2}
         if(n == 1 && k==1){
             vector<int> tmp;
             tmp.push_back(1);
             result.push_back(tmp);
             return result;
         }
-        */
+        */   
         if(k == 1){
             for(int i = 0; i < n; i++){
                 vector<int> tmp;
