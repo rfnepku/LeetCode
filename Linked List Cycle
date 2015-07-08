@@ -1,0 +1,25 @@
+Given a linked list, determine if it has a cycle in it.
+
+Follow up:
+Can you solve it without using extra space?
+
+//no extra space
+class Solution {
+public:
+    bool hasCycle(ListNode *head) {
+        if(head == NULL) return false;
+        ListNode* pre = head;
+        ListNode* cur = head->next;
+        while(cur != NULL){
+            if(cur == pre)
+                return true;
+                
+            if(cur->next != NULL)
+                cur = (cur->next)->next;
+            else return false;
+            
+            pre = pre->next;
+        }
+        return false;
+    }
+};
