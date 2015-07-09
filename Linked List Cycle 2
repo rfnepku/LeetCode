@@ -51,3 +51,31 @@ public:
         return fast;
     }
 };
+
+//even no need for count
+class Solution {
+public:
+    ListNode *detectCycle(ListNode *head) {
+        ListNode* fast = head;
+        ListNode* slow = head;
+        bool hasCycle = false;
+        while(fast != NULL && fast->next != NULL){
+            fast = (fast->next)->next;
+            slow = slow->next;
+            if(fast == slow){
+                hasCycle = true;
+                break;
+            }
+        }
+        
+        if(!hasCycle)   return NULL;
+        //by now fast has moved 2 cycle length distance, slow moved 1 cycle lenght distance
+        
+        slow = head;
+        while(fast != slow){
+            fast = fast->next;
+            slow = slow->next;
+        }
+        return fast;
+    }
+};
