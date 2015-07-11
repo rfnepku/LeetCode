@@ -1,0 +1,37 @@
+Given a binary tree, determine if it is height-balanced.
+
+For this problem, a height-balanced binary tree is defined as a binary tree in 
+which the depth of the two subtrees of every node never differ by more than 1.
+
+class Solution {
+public:
+    bool helper(TreeNode* root, int& height){
+        int left_height = 0;
+        int right_height = 0;
+        bool isBalancedLeft = true; //should be true, it may not enter if statements
+        bool isBalancedRight = true;
+        
+        if(root->left != NULL){
+            isBalancedLeft = helper(root->left, left_height);
+            left_height++;
+        }
+        
+        if(root->right != NULL){
+            isBalancedRight = helper(root->right, right_height);
+            right_height++;
+        }
+        
+        height = std::max(left_height, right_height);
+        
+        int diff = std::abs(left_height - right_height);
+        if(diff > 1) return false;
+        return (isBalancedLeft && isBalancedRight);
+        
+    }
+    
+    bool isBalanced(TreeNode* root) {
+        if(root == NULL)    return true;
+        int height = 0;
+        return helper(root, height);    //can not directly use helper(root, 0). the second parameter type is int reference
+    }
+};
