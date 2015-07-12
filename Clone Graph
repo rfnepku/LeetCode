@@ -1,0 +1,75 @@
+Clone an undirected graph. Each node in the graph contains a label and a list of its neighbors.
+
+
+OJ's undirected graph serialization:
+Nodes are labeled uniquely.
+
+We use # as a separator for each node, and , as a separator for node label and each neighbor of the node.
+As an example, consider the serialized graph {0,1,2#1,2#2,2}.
+
+The graph has a total of three nodes, and therefore contains three parts as separated by #.
+
+First node is labeled as 0. Connect node 0 to both nodes 1 and 2.
+Second node is labeled as 1. Connect node 1 to node 2.
+Third node is labeled as 2. Connect node 2 to node 2 (itself), thus forming a self-cycle.
+Visually, the graph looks like the following:
+
+       1
+      / \
+     /   \
+    0 --- 2
+         / \
+         \_/
+
+/**
+ * Definition for undirected graph.
+ * struct UndirectedGraphNode {
+ *     int label;
+ *     vector<UndirectedGraphNode *> neighbors;
+ *     UndirectedGraphNode(int x) : label(x) {};
+ * };
+ */
+
+//how to give each node a different name, solve this problem use a map
+//the hardest part is to understand what we are traversing is old graph, use the queue
+//when traversing, we keep creating new nodes. When create??  use map to store all new nodes
+ 
+class Solution {
+public:
+    UndirectedGraphNode *cloneGraph(UndirectedGraphNode *node) {
+        //unordered_set<UndirectedGraphNode*> done;
+        unordered_map<UndirectedGraphNode*, UndirectedGraphNode*> mymap;
+        if(node == NULL) return NULL;
+        queue<UndirectedGraphNode*> myqueue;        //queue stores info of old graph
+        myqueue.push(node);
+        UndirectedGraphNode* root = new UndirectedGraphNode(node->label);
+        mymap[node] = root;
+        
+        //cur is the node currently being processed, cur is from old graph
+        while(!myqueue.empty()){
+            UndirectedGraphNode* cur = myqueue.front();
+            myqueue.pop();
+            
+            for(auto it = (cur->neighbors).begin(); it != (cur->neighbors).end(); it++){
+                UndirectedGraphNode* neighbor = *it;
+                 
+                if(mymap.find(neighbor) == mymap.end()){
+                    //when to create this new copy node
+                    UndirectedGraphNode* copy_node = new UndirectedGraphNode(neighbor->label);
+                    mymap[neighbor] = copy_node;
+                    
+                    //when to push into queue
+                    myqueue.push(neighbor);
+                }
+                
+                //here we should use copy node to push back neighbour,
+                //it's better to use an unordered_map to get a relation from old node and its copy
+                //also solves the problem of same name
+                mymap[cur]->neighbors.push_back(mymap[neighbor]); 
+            }
+            
+        }
+        
+        return root;
+    }
+};
