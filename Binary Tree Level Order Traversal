@@ -14,7 +14,40 @@ return its level order traversal as:
   [15,7]
 ]
 
-//the problem I encounter is that how to seperate values by level?? I use a pair to keep track of height 
+//the problem I encounter is that how to seperate values by level?? 
+
+//the first solution is what i meant to use, but i didn't comee up with it. Make use of queue characteristics
+//the second solution is to use a pair to keep track of height, which is tedious 
+class Solution {
+public:
+    vector<vector<int>> levelOrder(TreeNode* root) {
+        vector<vector<int>> result;
+        vector<int> level;
+        queue<TreeNode*> myqueue;
+        if(root == NULL) return result;
+        myqueue.push(root);
+        int count = 1;
+        
+        while(!myqueue.empty()){
+            TreeNode* cur = myqueue.front();
+            myqueue.pop();
+            
+            if(cur->left != NULL)   myqueue.push(cur->left);
+            if(cur->right != NULL)  myqueue.push(cur->right);
+            
+            level.push_back(cur->val);
+            count--;
+            if(count == 0){
+                result.push_back(level);
+                level.clear();
+                count = myqueue.size();
+            }
+        }
+        
+        return result;
+    } 
+};
+
 class Solution {
 public:
     vector<vector<int>> levelOrder(TreeNode* root) {
