@@ -1,0 +1,57 @@
+Given a binary tree, return the level order traversal of its nodes' values. (ie, from left to right, level by level).
+
+For example:
+Given binary tree {3,9,20,#,#,15,7},
+    3
+   / \
+  9  20
+    /  \
+   15   7
+return its level order traversal as:
+[
+  [3],
+  [9,20],
+  [15,7]
+]
+
+//the problem I encounter is that how to seperate values by level?? I use a pair to keep track of height 
+class Solution {
+public:
+    vector<vector<int>> levelOrder(TreeNode* root) {
+        vector<vector<int>> result;
+        queue<pair<int, int>> level;
+        queue<pair<TreeNode*, int>> myqueue;
+        if(root == NULL)    return result;
+        myqueue.push(pair<TreeNode*, int>(root, 1));
+        
+        while(!myqueue.empty()){
+            TreeNode* cur = myqueue.front().first;
+            int height = myqueue.front().second;
+            myqueue.pop();
+            if(cur->left != NULL){
+                myqueue.push(pair<TreeNode*, int>(cur->left, height+1));
+            }
+            if(cur->right != NULL){
+                myqueue.push(pair<TreeNode*, int>(cur->right, height+1));
+            }
+            
+            level.push(pair<int, int>(cur->val, height));
+        }
+        
+        vector<int> tmp;
+        int pre_height = 1;
+        while(!level.empty()){
+            int height = level.front().second;
+            if(height != pre_height){
+                result.push_back(tmp);
+                tmp.clear();
+                pre_height = height;
+            }
+            tmp.push_back(level.front().first);
+            level.pop();
+        }
+        
+        result.push_back(tmp);
+        return result;
+    }
+};
