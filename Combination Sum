@@ -1,0 +1,124 @@
+Given a set of candidate numbers (C) and a target number (T), find all unique combinations in C where the candidate numbers sums to T.
+
+The same repeated number may be chosen from C unlimited number of times.
+
+Note:
+All numbers (including target) will be positive integers.
+Elements in a combination (a1, a2, … , ak) must be in non-descending order. (ie, a1 ≤ a2 ≤ … ≤ ak).
+The solution set must not contain duplicate combinations.
+For example, given candidate set 2,3,6,7 and target 7, 
+A solution set is: 
+[7] 
+[2, 2, 3]
+
+Notes:
+1. The first solution is simply two dimentional DP    a[i][j], i is the target and j is the current max index of value i can use
+at first, I thought the recursive relation is that
+    a[i][j]:  (1). all the a[i][k],  for k < j 
+              (2). a[i - k * value of last element j][j-1] and each solution should add k numbers of last element j
+        But this will cause duplicate solution. Eg a[5][4] can include a[5][2] and a[5][3], but a[5][3] can also include a[5][2]
+    
+    The true recursive relation should be
+    a[i][j]:  (1). a[i][j-1], 
+              (2). a[i - k * value of last element j][j-1] and each solution should add k numbers of last element j
+
+//
+class Solution {
+public:
+    vector<vector<int>> combinationSum(vector<int>& candidates, int target) {
+        std::sort(candidates.begin(), candidates.end());
+        int size = candidates.size();
+        vector<vector<int>> a[target+1][size];
+        
+        //Boundary condition: only candidates[0] can be used
+        for(int i = 1; i <= target; i++){
+            int element = candidates[0];
+            if(i % element == 0){
+                a[i][0].push_back(vector<int>(i/element, element));
+            }
+        }
+        
+        
+        //Boundary condition: target = 0. This is important, we should put a dummy vector into a[0][j]
+        //so that in recusion below, it will return an empty vector and can be pushed into elements
+        for(int j = 0; j < size; j++){
+            a[0][j].push_back(vector<int>());
+        }
+        
+        for(int i = 1; i <= target; i++){
+            for(int j = 1; j < size; j++){
+                //first case
+                for(auto it = a[i][j-1].begin(); it != a[i][j-1].end(); it++){
+                    a[i][j].push_back(*it);
+                }   
+                
+                //second case
+                int count = 0;
+                int l = i;
+                while(l >= candidates[j]){
+                    count++;
+                    l = l - candidates[j];
+                    vector<vector<int>> sub = a[l][j-1];
+                    
+                    for(auto it = sub.begin(); it != sub.end(); it++){
+                        vector<int> tmp = *it;
+                        for(int u = 0; u < count; u++){
+                            tmp.push_back(candidates[j]);
+                        }
+                        a[i][j].push_back(tmp);
+                    }
+                }
+                
+            }
+        }
+    
+        return a[target][size-1];    
+        
+    }
+};
+
+//time exceeds problem
+class Solution {
+public:
+    vector<vector<int>> helper(vector<int>& candidates, int target, int last){
+        vector<vector<int>> result;
+        
+        if(last == 0){
+            if(target % candidates[last] == 0){
+                result.push_back(vector<int>(target/candidates[last], candidates[last]));
+            }
+            return result;
+        }
+        
+        for(int i = 0; i < last; i++){
+            vector<vector<int>> sub = helper(candidates, target, last - (i+1));
+            for(int j = 0; j < sub.size(); j++){
+                result.push_back(sub[j]);
+            }
+        }
+        
+        //use candidates[last]
+        int count = 0;
+        while(target >= candidates[last]){
+            target = target - candidates[last];
+            vector<vector<int>> sub = helper(candidates, target, last-1);
+            count++;
+            
+            //there is situation that sub is empty
+            for(int i = 0; i < sub.size(); i++){
+                for(int j = 0; j < count; j++){
+                    sub[i].push_back(candidates[last]);
+                }
+                result.push_back(sub[i]);
+            }
+        }
+        
+        return result;
+    }
+
+    vector<vector<int>> combinationSum(vector<int>& candidates, int target) {
+        std::sort(candidates.begin(), candidates.end());
+        int size = candidates.size();
+        return helper(candidates, target, size-1);
+    }
+};
