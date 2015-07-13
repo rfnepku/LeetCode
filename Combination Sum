@@ -77,7 +77,7 @@ public:
     }
 };
 
-//time exceeds problem
+//top down solution
 class Solution {
 public:
     vector<vector<int>> helper(vector<int>& candidates, int target, int last){
@@ -90,11 +90,9 @@ public:
             return result;
         }
         
-        for(int i = 0; i < last; i++){
-            vector<vector<int>> sub = helper(candidates, target, last - (i+1));
-            for(int j = 0; j < sub.size(); j++){
-                result.push_back(sub[j]);
-            }
+        vector<vector<int>> sub = helper(candidates, target, last - 1);
+        for(int j = 0; j < sub.size(); j++){
+            result.push_back(sub[j]);
         }
         
         //use candidates[last]
@@ -105,15 +103,17 @@ public:
             count++;
             
             //there is situation that sub is empty
-            for(int i = 0; i < sub.size(); i++){
-                for(int j = 0; j < count; j++){
-                    sub[i].push_back(candidates[last]);
+            if(sub.size() != 0){
+                for(int i = 0; i < sub.size(); i++){
+                    for(int j = 0; j < count; j++){
+                        sub[i].push_back(candidates[last]);
+                    }
+                    result.push_back(sub[i]);
                 }
-                result.push_back(sub[i]);
             }
         }
-        
-        return result;
+
+       return result;
     }
 
     vector<vector<int>> combinationSum(vector<int>& candidates, int target) {
@@ -122,3 +122,7 @@ public:
         return helper(candidates, target, size-1);
     }
 };
+
+
+
+
