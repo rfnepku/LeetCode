@@ -21,6 +21,20 @@ at first, I thought the recursive relation is that
     The true recursive relation should be
     a[i][j]:  (1). a[i][j-1], 
               (2). a[i - k * value of last element j][j-1] and each solution should add k numbers of last element j
+              
+2. illustration
+    j 0, 1, 2, 3, ... last
+i
+0           *
+1           *
+2           
+.     *  *  *  num
+.
+target 
+
+3. Such problems still three things     (1). subproblems    (2). recursive relation     (3) all boundary conditions
+
+4 what is backtracking solution?
 
 //
 class Solution {
@@ -84,6 +98,8 @@ public:
         vector<vector<int>> result;
         
         if(last == 0){
+            //it target = 0, it will still generate a empty vector so that later recursion, 
+            //so that it will not lose possible combinations
             if(target % candidates[last] == 0){
                 result.push_back(vector<int>(target/candidates[last], candidates[last]));
             }
@@ -102,7 +118,7 @@ public:
             vector<vector<int>> sub = helper(candidates, target, last-1);
             count++;
             
-            //there is situation that sub is empty
+            //there is situation that sub is empty, actually no need for the if statement. if sub.size() is equal to 0, it will not enter the for loop
             if(sub.size() != 0){
                 for(int i = 0; i < sub.size(); i++){
                     for(int j = 0; j < count; j++){
