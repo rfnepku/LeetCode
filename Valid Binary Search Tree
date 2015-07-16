@@ -1,0 +1,52 @@
+Given a binary tree, determine if it is a valid binary search tree (BST).
+
+Assume a BST is defined as follows:
+
+The left subtree of a node contains only nodes with keys less than the node's key.
+The right subtree of a node contains only nodes with keys greater than the node's key.
+Both the left and right subtrees must also be binary search trees.
+
+
+//This problem is very similar to Blanced Binary Tree
+class Solution {
+public:
+    bool helper(TreeNode* root, int& min, int& max){
+        int lmin = 0; 
+        int lmax = 0; 
+        int rmin = 0;
+        int rmax = 0;
+        
+        if(root->left == NULL && root->right == NULL){
+            min = root->val;
+            max = root->val;
+            return true;
+        }
+        
+        if(root->left != NULL && root->right == NULL){
+            bool leftValid = helper(root->left, lmin, lmax);
+            min = lmin;
+            max = root->val;
+            return leftValid && (root->val > lmax);
+        }
+        
+        if(root->left == NULL && root->right != NULL){
+            bool rightValid = helper(root->right, rmin, rmax);
+            max = rmax;
+            min = root->val;
+            return rightValid && (root->val < rmin);
+        }
+        
+        bool leftValid = helper(root->left, lmin, lmax);
+        bool rightValid = helper(root->right, rmin, rmax);
+        min = lmin;
+        max = rmax;
+        return leftValid && rightValid && (root->val > lmax) && (root->val < rmin);
+    }
+
+    bool isValidBST(TreeNode* root) {
+        if(root == NULL)    return true;
+        int min = 0;
+        int max = 0;
+        return helper(root, min, max) && (root->val >= min) && (root->val <= max); //here be >= or <= for the     corner case [0]
+    }
+};
