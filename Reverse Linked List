@@ -1,0 +1,29 @@
+Reverse a singly linked list
+
+//recurisve solution
+//A->B->C    The reverse order is C->B, B->A due to recursion
+class Solution {
+public:
+    ListNode* reverse(ListNode* pre, ListNode* cur){
+        ListNode* new_head;
+        if(cur->next == NULL){
+            cur->next = pre;
+            pre->next = NULL;
+            return cur;
+        }
+        else
+            new_head = reverse(pre->next, cur->next);
+        
+        cur->next = pre;
+        pre->next = NULL;
+        
+        return new_head;
+    }
+    
+    ListNode* reverseList(ListNode* head) {
+        if(head == NULL || head->next == NULL)
+            return head;
+        ListNode* new_head = reverse(head, head->next);
+        return new_head;
+    }
+};
