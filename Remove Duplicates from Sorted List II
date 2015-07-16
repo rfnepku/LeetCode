@@ -1,0 +1,75 @@
+Given a sorted linked list, delete all nodes that have duplicate numbers, leaving only distinct numbers from the original list.
+
+For example,
+Given 1->2->3->3->4->4->5, return 1->2->5.
+Given 1->1->1->2->3, return 2->3.
+
+//in this problem, head should be processed differently from internal nodes 
+//far more corner cases than i thought
+//alway take care of dereferencing NULL pointer
+class Solution {
+public:
+    ListNode* deleteDuplicates(ListNode* head) {
+        if(head == NULL || head->next == NULL)
+            return head;
+            
+        ListNode* pre = head;
+        ListNode* cur = head->next;
+        
+        //first situation: remove duplicate head nodes to get head;
+        while(cur != NULL){
+            if(cur->val != pre->val)
+                break;
+                
+            while(cur->val == pre->val){
+                cur = cur->next;
+                if(cur == NULL) break;
+            }    
+
+            if(cur == NULL){
+                head = cur;
+                return head;
+            }
+            if(cur->val != pre->val){
+                head = cur;
+                pre = cur;
+                cur = pre->next;
+            }
+            
+            if(cur == NULL){
+                return head;
+            }
+            
+            if(cur->val != pre->val)
+                break;
+        }
+        
+        //second situation: remove internal duplicate nodes
+        ListNode* lat = cur->next;
+        while(lat != NULL){
+            while(lat->val != cur->val){
+                pre = cur;
+                cur = lat;
+                lat = lat->next;
+                if(lat == NULL) break;
+            } 
+            
+            if(lat == NULL) break;
+            while(lat->val == cur->val){
+                lat = lat->next;
+                if(lat == NULL) break;
+            }
+            
+            //there are two cases here, lat is NULL or lat->val != cur->val
+            pre->next = lat;
+            cur = lat;
+            
+            if(lat != NULL)
+                lat = cur->next;
+            else
+                break;
+        }
+        
+        return head;
+    }
+};
