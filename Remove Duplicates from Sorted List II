@@ -4,9 +4,52 @@ For example,
 Given 1->2->3->3->4->4->5, return 1->2->5.
 Given 1->1->1->2->3, return 2->3.
 
-//in this problem, head should be processed differently from internal nodes 
+//in this problem, head should be processed differently from internal nodes. But with the help of dummy node, we can simplify it.
 //far more corner cases than i thought
 //alway take care of dereferencing NULL pointer
+
+//with dummy node
+class Solution {
+public:
+    ListNode* deleteDuplicates(ListNode* head) {
+        if(head == NULL || head->next == NULL)
+            return head;
+        
+        ListNode* dummy = new ListNode(0);
+        dummy->next = head;
+        ListNode* pre = dummy;
+        ListNode* cur = head;
+        ListNode* lat = cur->next;
+        
+        while(lat != NULL){
+            while(lat->val != cur->val){
+                pre = cur;
+                cur = lat;
+                lat = lat->next;
+                if(lat == NULL) break;
+            } 
+            
+            if(lat == NULL) break;
+            while(lat->val == cur->val){
+                lat = lat->next;
+                if(lat == NULL) break;
+            }
+            
+            //there are two cases here, lat is NULL or lat->val != cur->val
+            pre->next = lat;
+            cur = lat;
+            
+            if(lat != NULL)
+                lat = cur->next;
+            else
+                break;
+        }
+        
+        return dummy->next;
+    }
+};
+
+//without dummy node
 class Solution {
 public:
     ListNode* deleteDuplicates(ListNode* head) {
