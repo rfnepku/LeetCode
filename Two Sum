@@ -1,0 +1,67 @@
+Given an array of integers, find two numbers such that they add up to a specific target number.
+
+The function twoSum should return indices of the two numbers such that they add up to the target, where index1 must be less than index2. Please note that your returned answers (both index1 and index2) are not zero-based.
+
+You may assume that each input would have exactly one solution.
+
+Input: numbers={2, 7, 11, 15}, target=9
+Output: index1=1, index2=2
+
+The vector will have duplicate numbers
+//two tricks
+//1. if(mymap[num2] != i+1)   add this to avoid the same number used twice
+//2. the commented for loop is wrong. It will fail the case  [0, 1, 2, 0] target = 0. I was silly to try to solve this
+//by like using unordered_multimap or use pair<nums[], index> as a hash key
+
+class Solution {
+public:
+    vector<int> twoSum(vector<int>& nums, int target) {
+        vector<int> result;
+        std::unordered_map<int, int> mymap;
+        int size = nums.size();
+        
+        for(int i = 0; i < size; i++){
+            mymap[nums[i]] = i+1;
+        }
+        
+        /*
+        for(auto it = mymap.begin(); it != mymap.end(); it++){
+            int num1 = it->first;
+            int num2 = target - num1;
+            if(mymap.find(num2) != mymap.end()){
+                if(mymap[num2] != it->second){
+                    if(mymap[num2] < it->second){
+                        result.push_back(mymap[num2]);
+                        result.push_back(it->second);
+                    }
+                    else{
+                        result.push_back(it->second);
+                        result.push_back(mymap[num2]);
+                    }
+                    break;   
+                }
+            }
+        }
+        */
+        
+        for(int i = 0; i < size; i++){
+            int num1 = nums[i];
+            int num2 = target - num1;
+            if(mymap.find(num2) != mymap.end()){
+                if(mymap[num2] != i+1){
+                    if(mymap[num2] < i+1){
+                        result.push_back(mymap[num2]);
+                        result.push_back(i+1);
+                    }
+                    else{
+                        result.push_back(i+1);
+                        result.push_back(mymap[num2]);
+                    }
+                    break;   
+                }
+            }            
+        }
+        
+        return result;
+    }
+};
