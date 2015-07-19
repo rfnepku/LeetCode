@@ -1,0 +1,27 @@
+Given a string containing just the characters '(', ')', '{', '}', '[' and ']', determine if the input string is valid.
+
+The brackets must close in the correct order, "()" and "()[]{}" are all valid but "(]" and "([)]" are not.
+
+class Solution {
+public:
+    bool isValid(string s) {
+       int size = s.size();
+       if(size == 0)    return true;
+       if(size == 1)    return false;
+       stack<char> mystack;
+       for(int i = 0; i < size; i++){
+           //in case that the stack is empty
+           if(mystack.empty()){
+               mystack.push(s[i]);
+               continue;
+           }
+           
+           if(s[i] == ')' && mystack.top() == '(' || s[i] == ']' && mystack.top() == '[' || s[i] == '}' && mystack.top() == '{'){
+               mystack.pop();
+           }
+           else
+               mystack.push(s[i]);
+       }
+       return mystack.empty();
+    }
+};
