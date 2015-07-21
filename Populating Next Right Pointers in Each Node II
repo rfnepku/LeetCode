@@ -1,0 +1,72 @@
+Follow up for problem "Populating Next Right Pointers in Each Node".
+
+What if the given tree could be any binary tree? Would your previous solution still work?
+
+Note:
+
+You may only use constant extra space.
+For example,
+Given the following binary tree,
+         1
+       /  \
+      2    3
+     / \    \
+    4   5    7
+After calling your function, the tree should look like:
+         1 -> NULL
+       /  \
+      2 -> 3 -> NULL
+     / \    \
+    4-> 5 -> 7 -> NULL
+    
+1. The BFS solution will definitely work without any changes.
+2. The DFS solution is very tricky. It has to be modified in two places.
+  2.1   DFS order!!  Right first then left
+  2.2   find next may not achieve in one step. 
+  
+class Solution {
+public:
+    void searchNext(TreeLinkNode* cur, TreeLinkNode* tmp){
+        while(tmp != NULL){
+            if(tmp->left != NULL){
+                cur->next = tmp->left;
+                break;
+            }
+            else if(tmp->right != NULL){
+                cur->next = tmp->right;
+                break;
+            }
+            else
+                tmp = tmp->next;
+        }
+        if(tmp == NULL) 
+            cur->next = NULL;  
+        return;
+    }
+    
+    void connect(TreeLinkNode *root) {
+        if(root == NULL)    return;
+ 
+        if(root->right != NULL){
+            if(root->next == NULL)
+                root->right->next = NULL;
+            else
+                searchNext(root->right, root->next);
+                
+            connect(root->right);
+        }
+        
+        if(root->left != NULL){
+            if(root->right != NULL)
+                root->left->next = root->right;
+            else if(root->next == NULL)
+                root->left->next = NULL;
+            else
+                searchNext(root->left, root->next);
+                
+            connect(root->left);
+        }
+        
+        return;
+    }
+};
