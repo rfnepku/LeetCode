@@ -1,0 +1,80 @@
+Given a collection of numbers that might contain duplicates, return all possible unique permutations.
+
+For example,
+[1,1,2] have the following unique permutations:
+[1,1,2], [1,2,1], and [2,1,1].
+
+//Better solution: refer to permutation 1
+//Deal with vector is much heavier than single number.
+//Solution one outperforms both at time and space
+
+class Solution {
+public:
+    void helper(vector<int>& nums, vector<vector<int>>& result, int i){
+        if(i == nums.size()){
+            result.push_back(nums);
+            return;
+        }
+        
+        std::unordered_set<int> myset;
+        for(int j = i; j < nums.size(); j++){
+            if(myset.find(nums[j]) != myset.end())
+                continue;
+            std::swap(nums[i], nums[j]);
+            helper(nums, result, i+1);
+            std::swap(nums[i], nums[j]);
+            myset.insert(nums[j]);
+        }
+        return;
+    }    
+
+    vector<vector<int>> permuteUnique(vector<int>& nums) {
+        int size = nums.size();
+        vector<vector<int>> result;
+        if(size == 0)   return result;
+        
+        helper(nums, result, 0);
+        return result;
+    }
+};
+
+
+
+
+//time exceed solution
+class Solution {
+public:
+    vector<vector<int>> helper(vector<int>& nums, int last){
+        vector<vector<int>> result;
+        
+        if(last == 0){
+            vector<int> tmp(1, nums[0]);
+            result.push_back(tmp);
+            return result;
+        }
+        
+        vector<vector<int>> sub = helper(nums, last-1);
+        
+        for(int i = 0; i < sub.size(); i++){
+            vector<int> tmp = sub[i];
+            tmp.push_back(nums[last]);
+            
+            for(int j = tmp.size()-1; j >= 0; j--){
+                std::swap(tmp[last], tmp[j]);
+                if(std::find(result.begin(), result.end(), tmp) == result.end()){
+                    result.push_back(tmp);
+                }
+                std::swap(tmp[last], tmp[j]);
+            }
+        }
+
+        return result;
+    }
+
+    vector<vector<int>> permuteUnique(vector<int>& nums) {
+        vector<vector<int>> result;
+        int size = nums.size();
+        if(size == 0)   return result;
+        return helper(nums, size-1);
+    }
+};
