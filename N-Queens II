@@ -1,0 +1,45 @@
+Follow up for N-Queens problem.
+
+Now, instead outputting board configurations, return the total number of distinct solutions.
+
+//Typical backtracking problem
+//Relate it with permutation problem
+
+class Solution {
+public:
+    bool check(vector<int>& record, int row, int col){
+        for(int i = 0; i < record.size(); i++){
+            int j = record[i];
+            if(j == col || std::abs(i - row) == std::abs(j - col))
+                return true;
+        }
+        return false;
+    }
+
+    void helper(int i, int n, int& count, vector<int>& record){
+        if(i == n){
+            count++;
+            return;
+        }
+        
+        for(int j = 0; j < n; j++){
+            if(check(record, i, j))
+                continue;
+            else{
+                record.push_back(j);
+                helper(i+1, n, count, record);
+                record.pop_back();
+            }
+        }
+        return;
+    }
+    
+
+    int totalNQueens(int n) {
+        if(n == 0)  return 0;
+        vector<int> record;
+        int count = 0;
+        helper(0, n, count, record);
+        return count;
+    }
+};
