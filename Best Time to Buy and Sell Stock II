@@ -5,6 +5,26 @@ Design an algorithm to find the maximum profit. You may complete as many transac
 
 However, you may not engage in multiple transactions at the same time (ie, you must sell the stock before you buy again).
 
+//A more clean solution
+class Solution {
+public:
+    int maxProfit(vector<int> &prices) {
+        int maxProfit = 0;
+        int size = prices.size();
+        if(size == 0 || size == 1) return maxProfit;
+        for(int i = 1; i < size; i++){
+            int delta = 0;
+            if(prices[i] > prices[i-1]){
+                delta = prices[i] - prices[i-1];
+                maxProfit += delta;
+            }
+        }
+        
+        return maxProfit;
+    }
+};
+
+
 //The idea is simple. Buy at the local lowest point, and sell at the local highest point
 //Especially pay attention to j+1 and i+1 index. It may go beyond the region.
 //Here the method we handle for j+1 and i+1 is different. For i, we use while(i < size - 1). For i, because there is no need to 
