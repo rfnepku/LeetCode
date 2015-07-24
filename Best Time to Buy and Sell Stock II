@@ -1,0 +1,52 @@
+Say you have an array for which the ith element is the price of a given stock on day i.
+
+Design an algorithm to find the maximum profit. You may complete as many transactions as you like 
+(ie, buy one and sell one share of the stock multiple times). 
+
+However, you may not engage in multiple transactions at the same time (ie, you must sell the stock before you buy again).
+
+//The idea is simple. Buy at the local lowest point, and sell at the local highest point
+//Especially pay attention to j+1 and i+1 index. It may go beyond the region.
+//Here the method we handle for j+1 and i+1 is different. For i, we use while(i < size - 1). For i, because there is no need to 
+do anything after a[size-1] < a[size-2].  For j, we add an extra if statement inside while loop
+
+class Solution {
+public:
+    int maxProfit(vector<int>& prices) {
+        int size = prices.size();
+        if(size < 2)    return 0;
+        int i = 0;
+        int j = 0;
+        int profit = 0;
+        
+        while(j < size){
+            while(i < size - 1){
+                if(prices[i+1] < prices[i])
+                    i++;
+                else
+                    break;
+            }
+
+            j = i + 1;
+            
+            while(j < size){
+                 //pay attention to index [j+1]
+                if(j == size-1){
+                    profit += prices[j] - prices[i];
+                    return profit;
+                }
+                
+                if(prices[j+1] > prices[j])
+                    j++;
+                else{
+                    profit += prices[j] - prices[i];
+                    break;
+                }
+            }
+            
+            i = j + 1;
+        }
+        
+        return profit;
+    }
+};
