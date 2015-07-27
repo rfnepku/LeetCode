@@ -27,6 +27,8 @@ public:
 };
 
 //Iterative solution
+//The stack process: (1). we always get the top of stack
+                    (2). after we pop the current value, we will push its right child and all sub left into stack...
 class Solution {
 public:
     int kthSmallest(TreeNode* root, int k) {
