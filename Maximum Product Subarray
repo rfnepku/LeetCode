@@ -1,0 +1,36 @@
+Find the contiguous subarray within an array (containing at least one number) which has the largest product.
+
+For example, given the array [2,3,-2,4],
+the contiguous subarray [2,3] has the largest product = 6.
+
+
+class Solution {
+public:
+    int maxProduct(vector<int>& nums) {
+        int size = nums.size();
+        
+        if(size == 1)   return nums[0];
+        
+        int a[size];
+        int b[size];        //b[i] stores the most negative one
+        a[0] = nums[0];
+        b[0] = 0;
+        
+        for(int i = 1; i < size; i++){
+            a[i] = std::max(nums[i], a[i-1]*nums[i]);
+            a[i] = std::max(a[i], b[i-1]*nums[i]);
+            
+            b[i] = std::min(0, nums[i]);
+            b[i] = std::min(b[i], b[i-1]*nums[i]);
+            b[i] = std::min(b[i], a[i-1]*nums[i]);
+        }
+        
+        int result = a[0];
+        for(int i = 1; i < size; i++){
+            if(a[i] > result)
+                result = a[i];
+        }
+        
+        return result;
+    }
+};
