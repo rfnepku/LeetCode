@@ -1,0 +1,88 @@
+  Implement a trie with insert, search, and startsWith methods.  
+    
+  
+//first understand the data member of TrieNode, why there is a bool
+//startsWith()   no need for the helper, since trie already has this branch, it means it must hava a word below
+class TrieNode {
+public:
+    // Initialize your data structure here.
+    TrieNode() {
+        isWord = false;
+        for(int i = 0; i < 26; i++)
+            children[i] = NULL;
+    }
+    
+    bool isWord;
+    TrieNode* children[26];
+};
+
+class Trie {
+public:
+    Trie() {
+        root = new TrieNode();
+    }
+
+    // Inserts a word into the trie.
+    void insert(string word) {
+        TrieNode* node = root;
+        for(int i = 0; i < word.size(); i++){
+            char c = word[i];
+            if(node->children[c-'a'])
+                node = node->children[c-'a'];
+            else{
+                node->children[c-'a'] = new TrieNode();
+                node = node->children[c-'a'];
+            }
+        }
+        node->isWord = true;
+    }
+
+    // Returns if the word is in the trie.
+    bool search(string word) {
+        TrieNode* node = root;
+        for(int i = 0; i < word.size(); i++){
+            char c = word[i];
+            if(node->children[c-'a'])
+                node = node->children[c-'a'];        
+            else
+                return false;
+        }
+        
+        return node->isWord;
+    }
+    
+    // Returns if there is any word in the trie
+    // that starts with the given prefix.
+    bool startsWith(string prefix) {
+        TrieNode* node = root;
+        for(int i = 0; i < prefix.size(); i++){
+            char c = prefix[i];
+            if(node->children[c-'a']){
+                node = node->children[c-'a'];        
+            }
+            else
+                return false;
+        }
+
+        //return helper(node); // no need for this.... since trie already has this branch, it means it must hava a word below
+        return true;
+    }
+
+private:
+    TrieNode* root;
+};
+    
+  bool helper(TrieNode* root){
+        if(root == NULL)
+            return false;
+        
+        if(root->isWord == true)
+            return true;
+        
+        for(int i = 0; i < 26; i++){
+            if(helper(root->children[i]))
+                return true;
+        }
+        
+        return false;
+    }
