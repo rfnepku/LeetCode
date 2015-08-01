@@ -1,0 +1,54 @@
+Given a string containing only digits, restore it by returning all possible valid IP address combinations.
+
+For example:
+Given "25525511135",
+
+return ["255.255.11.135", "255.255.111.35"]. (Order does not matter)
+
+//stoi if accepts too long string, it will throw exception
+//0 can not be followed by other digits in one part
+
+class Solution {
+public:
+    void helper(int count, int begin, int end, string& s, string sub, vector<string>& result){
+        if(count > 3)   return;
+        if(begin > end) return;
+        
+        if(count == 3){
+            string tmp = s.substr(begin);
+            if(tmp.size() > 3)  return; //in case that tmo will be too long, the stoi will have throw exception
+            if(tmp.size() != 1 && tmp[0] == '0')    return;
+            if(stoi(tmp) <= 255){
+                sub += tmp;
+                result.push_back(sub);
+            }
+            return;
+        }
+        
+        count++;
+        string s1 = s.substr(begin, 1);
+        s1.push_back('.');
+        helper(count, begin+1, end, s, sub+s1, result);
+        
+        if(s[begin] == '0') return;         //0 can not be followed by other digits
+        
+        if(begin+1 > end)   return;
+        string s2 = s.substr(begin, 2);
+        s2.push_back('.');
+        helper(count, begin+2, end, s, sub+s2, result);
+        
+        if(begin+2 > end)   return;
+        string s3 = s.substr(begin, 3);
+        if(stoi(s3) > 255)  return;
+        s3.push_back('.');
+        helper(count, begin+3, end, s, sub+s3, result);
+        return;
+    }
+
+    vector<string> restoreIpAddresses(string s) {
+        int size = s.size();
+        vector<string> result;
+        helper(0, 0, size-1, s, string(), result);
+        return result;
+    }
+};
