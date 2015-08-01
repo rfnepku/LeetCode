@@ -1,0 +1,27 @@
+Given a singly linked list where elements are sorted in ascending order, convert it to a height balanced BST.
+
+//head ..... slow slow->next ....
+//slow->next is used as root, so fast starts at head->next->next
+
+class Solution {
+public:
+    TreeNode* sortedListToBST(ListNode* head) {
+        if(head == NULL)    
+            return NULL;
+        if(head->next == NULL)
+            return (new TreeNode(head->val));
+        ListNode* slow = head;
+        ListNode* fast = head->next->next;
+        while(fast != NULL && fast->next != NULL){
+            fast = fast->next->next;
+            slow = slow->next;
+        }
+        
+        TreeNode* root = new TreeNode(slow->next->val);
+        root->right = sortedListToBST(slow->next->next);
+     
+        slow->next = NULL;
+        root->left = sortedListToBST(head);
+        return root;
+    }
+};
