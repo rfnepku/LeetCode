@@ -1,0 +1,34 @@
+Given two strings s and t, write a function to determine if t is an anagram of s.
+
+For example,
+s = "anagram", t = "nagaram", return true.
+s = "rat", t = "car", return false.
+
+
+//use sort   O(nlogn)
+class Solution {
+public:
+    bool isAnagram(string s, string t) {
+        std::sort(s.begin(), s.end());
+        std::sort(t.begin(), t.end());
+        return (s==t);
+    }
+};
+
+//use hashtable O(n) but extra space
+class Solution {
+public:
+    void constructMap(string& s, std::unordered_map<char, int>& mymap){
+        for(int i = 0; i < s.size(); i++)
+            mymap[s[i]]++;
+        return;
+    }
+
+    bool isAnagram(string s, string t) {
+        unordered_map<char, int> map1;
+        unordered_map<char, int> map2;
+        constructMap(s, map1);
+        constructMap(t, map2);
+        return map1==map2;
+    }
+};
