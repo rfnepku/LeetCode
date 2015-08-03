@@ -1,0 +1,74 @@
+Given a singly linked list, determine if it is a palindrome.
+
+Follow up:
+Could you do it in O(n) time and O(1) space?
+
+1. Find mid
+  (1) A->B->C->D->null      in this case, slow is B
+  (2) A->B->C->D->E->null   in this case, slow is C
+
+2. After reverse
+  (1) A->B->C<-D
+            ->null
+            
+  (2) A->B->C->D<-E
+            ->null
+
+3. Compare if equal: exit until one side reaches null
+class Solution {
+public:
+    bool isPalindrome(ListNode* head) {
+        if(head == NULL || head->next == NULL)
+            return true;
+        
+        //these two sentences are used to make sure that slow->next->next is not null. Can be replaced by if(slow->next->next) ...
+        /*
+        if(head->next->next == NULL)    //2
+            return (head->val == head->next->val);
+            
+        if(head->next->next->next == NULL)  //3
+            return (head->val == head->next->next->val);
+        */ 
+        
+        ListNode* fast = head;
+        ListNode* slow = head;
+        while(fast->next != NULL && fast->next->next != NULL){
+            fast = fast->next->next;
+            slow = slow->next;
+        }
+        
+        
+        if(slow->next->next == NULL){
+            return slow->next->val == head->val;
+        }
+        
+        ListNode* head1 = reverse(slow->next, slow->next->next);
+        
+        while(head1 != NULL && head != NULL){
+            if(head1->val != head->val)
+                return false;
+            
+            head1 = head1->next;
+            head = head->next;
+        }
+        
+        return true;
+    }
+    
+private:
+    ListNode* reverse(ListNode* pre, ListNode* cur){
+        if(cur->next == NULL){
+            cur->next = pre;
+            pre->next = NULL;
+            return cur;
+        }
+        
+        ListNode* result = reverse(pre->next, cur->next);
+        
+        cur->next = pre;
+        pre->next = NULL;
+        
+        return result;
+    }
+
+};
