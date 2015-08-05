@@ -1,0 +1,54 @@
+There are a total of n courses you have to take, labeled from 0 to n - 1.
+
+Some courses may have prerequisites, for example to take course 0 you have to first take course 1, 
+which is expressed as a pair: [0,1]
+
+Given the total number of courses and a list of prerequisite pairs, is it possible for you to finish all courses?
+
+//state[0] means undiscovered
+//state[1] means being searched (or in other words, it's still in the stack)
+//state[2] means finished, all its adjacnet nodes are searched
+
+//DFS2 Because the whole graph may consist several connected components
+
+//if adjacent is 1, it forms a cycle
+//if adjacent is 0, recursively call dfs
+//if adjacent is 2, do nothing
+
+class Solution {
+public:
+    bool canFinish(int numCourses, vector<pair<int, int>>& prerequisites) {
+        vector<vector<int>> graph(numCourses);
+        for(int i = 0; i < prerequisites.size(); i++){
+            pair<int, int> tmp = prerequisites[i];
+            graph[tmp.second].push_back(tmp.first);
+        }
+        
+        bool result = true;
+        vector<int> state(numCourses, 0);
+        for(int i = 0; i < numCourses; i++){              //DFS2
+            if(result == false) return false;
+            if(state[i] == 0)
+                dfs(i, result, state, graph);
+        }
+        return result;
+    }
+
+private:
+    void dfs(int node, bool& result, vector<int>& state, vector<vector<int>>& graph){
+        state[node] = 1;
+        for(int i = 0; i < graph[node].size(); i++){
+            int node_end = graph[node][i];
+            if(state[node_end] == 1){
+                result = false;
+                return;
+            }
+            
+            if(state[node_end] == 0)
+                dfs(node_end, result, state, graph);
+        }
+        state[node] = 2;
+        return;
+    }
+
+};
