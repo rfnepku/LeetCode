@@ -1,0 +1,44 @@
+//pay attention to the construction of graph, which node as start and which as end
+
+class Solution {
+public:
+    vector<int> findOrder(int numCourses, vector<pair<int, int>>& prerequisites) {
+        vector<vector<int>> graph(numCourses);
+        vector<int> order;
+        for(int i = 0; i < prerequisites.size(); i++){
+            pair<int, int> tmp = prerequisites[i];
+            graph[tmp.first].push_back(tmp.second);
+        }
+        
+        bool result = true;
+        vector<int> state(numCourses, 0);
+        for(int i = 0; i < numCourses; i++){
+            if(result == false) return vector<int>();
+            if(state[i] == 0)
+                dfs(i, result, state, graph, order);
+        }
+        
+        if(result)  return order;
+        else return vector<int>();
+        
+    }
+    
+    private:
+    void dfs(int node, bool& result, vector<int>& state, vector<vector<int>>& graph, vector<int>& order){
+        state[node] = 1;
+        for(int i = 0; i < graph[node].size(); i++){
+            int node_end = graph[node][i];
+            if(state[node_end] == 1){
+                result = false;
+                return;
+            }
+            
+            if(state[node_end] == 0)
+                dfs(node_end, result, state, graph, order);
+        }
+        state[node] = 2;
+        order.push_back(node);
+        return;
+    }
+};
+
