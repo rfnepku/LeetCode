@@ -9,6 +9,26 @@ For example, given the following matrix:
 Return 4.
 
 
+//A more concise solution DP
+class Solution {
+public:
+    int maximalSquare(vector<vector<char>>& matrix) {
+        if(matrix.size() == 0)  return 0;
+        vector<vector<int>> num(matrix.size()+1, vector<int>(matrix[0].size()+1, 0));
+        int max = 0;
+        for(int i = 1; i < num.size(); i++)
+            for(int j = 1; j < num[i].size(); j++){
+                if(matrix[i-1][j-1] == '1'){
+                    num[i][j] = std::min(num[i-1][j], std::min(num[i][j-1], num[i-1][j-1])) + 1;
+                    if(num[i][j] > max)
+                        max = num[i][j];
+                }
+            }
+    
+        return max*max;
+    }
+};
+
 //Do a preprocess step
 //Time complexity is O(n3)
 //while(imax < m.size() && m[imax][j] >= val). once wrote imax < m[i].size() by mistake, causes segmentation fault
