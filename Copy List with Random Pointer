@@ -1,0 +1,36 @@
+A linked list is given such that each node contains an additional random pointer 
+which could point to any node in the list or null.
+
+Return a deep copy of the list.
+
+//Use hashtable so that we can get a corresponding relation between the node pointed to by random pointer in both lists
+//Attention about the scope issue: after each while loop, the tmp variable is gone, but the memory it points to is still used
+
+class Solution {
+public:
+    RandomListNode *copyRandomList(RandomListNode *head) {
+        if(head == NULL)    return NULL;
+        std::unordered_map<RandomListNode*, RandomListNode*> mymap;
+        RandomListNode* myhead = new RandomListNode(head->label);
+        RandomListNode* me = myhead;
+        RandomListNode* it = head;
+        mymap[it] = me;
+        while(it->next != NULL){
+            RandomListNode* tmp = new RandomListNode(it->next->label);
+            me->next = tmp;
+            mymap[it->next] = me->next;
+            me = me->next;
+            it = it->next;
+        }
+        
+        me = myhead; it = head;
+        while(me != NULL){
+            if(it->random == NULL)  me->random = NULL;
+            else    me->random = mymap[it->random];
+            me = me->next;
+            it = it->next;
+        }
+        
+        return myhead;
+    }
+};
