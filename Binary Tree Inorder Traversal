@@ -45,34 +45,24 @@ class Solution {
 public:
     vector<int> inorderTraversal(TreeNode* root) {
         vector<int> result;
-        
         if(root == NULL)    return result;
+        stack<TreeNode*> st;
+        st.push(root);
+        TreeNode* cur = root->left;       
         
-        //stack<int> mystack;
-        stack<TreeNode*> mystack;
-
-        bool done = false;
-        TreeNode* current = root;
-        
-        while(!done){
-            while(current != NULL){
-                mystack.push(current);  //push node pointer into stack, not value
-                current = current->left;
+        while(!st.empty() || cur != NULL){
+            while(cur != NULL){
+                st.push(cur);
+                cur = cur->left;
             }
             
-            if(!mystack.empty()){
-                current = mystack.top();
-                result.push_back(mystack.top()->val);
-                mystack.pop();
-                current = current->right;    
-            }
-            
-            else{
-                done = true;
-            }
+            result.push_back(st.top()->val);
+            cur = st.top()->right;
+            st.pop();
             
         }
-     
+
         return result;   
     }
 };
+
