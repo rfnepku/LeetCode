@@ -1,0 +1,120 @@
+Given a 2d grid map of '1's (land) and '0's (water), count the number of islands. An island is surrounded by water and is formed by connecting adjacent lands horizontally or vertically. You may assume all four edges of the grid are all surrounded by water.
+
+Example 1:
+
+11110
+11010
+11000
+00000
+Answer: 1
+
+Example 2:
+
+11000
+11000
+00100
+00011
+Answer: 3
+
+//The essence is find the number of connected components in a graph
+
+//BFS
+class Solution {
+public:
+    int numIslands(vector<vector<char>>& grid) {
+        int row = grid.size();
+        int result = 0;
+        if(row == 0)    return 0;
+        int col = grid[0].size();
+        
+        for(int i = 0; i < row; i++)
+            for(int j = 0; j < col; j++){
+                if(grid[i][j] == '1'){
+                    result++;
+                    bfs(i, j, grid, row, col);
+                }
+            }
+        return result;
+    }
+    
+private:
+    void bfs(int i, int j, vector<vector<char>>& grid, int row, int col){
+        queue<pair<int, int>> myqueue;
+        myqueue.push(make_pair(i, j));
+        while(!myqueue.empty()){
+            pair<int, int> cur = myqueue.front();
+            myqueue.pop();
+            i = cur.first;
+            j = cur.second;
+            
+            if(i > 0 && grid[i-1][j] == '1'){
+                grid[i-1][j] = '0';
+                myqueue.push(make_pair(i-1, j));
+            }
+            
+            if(i < row-1 && grid[i+1][j] == '1'){
+                grid[i+1][j] = '0';
+                myqueue.push(make_pair(i+1, j));
+            }
+            
+            if(j > 0 && grid[i][j-1] == '1'){
+                grid[i][j-1] = '0';
+                myqueue.push(make_pair(i, j-1));
+            }
+                
+            
+            if(j < col-1 && grid[i][j+1] == '1'){
+                grid[i][j+1] = '0';
+                myqueue.push(make_pair(i, j+1));
+            }
+        }
+        return;
+    }
+};
+
+//DFS
+class Solution {
+public:
+    int numIslands(vector<vector<char>>& grid) {
+        int row = grid.size();
+        int result = 0;
+        if(row == 0)    return 0;
+        int col = grid[0].size();
+        
+        for(int i = 0; i < row; i++)
+            for(int j = 0; j < col; j++){
+                if(grid[i][j] == '1'){
+                    result++;
+                    dfs(i, j, grid, row, col);
+                }
+            }
+        
+        return result;
+    }
+    
+private:
+    void dfs(int i, int j, vector<vector<char>>& grid, int row, int col){
+        if(i > 0 && grid[i-1][j] == '1'){
+            grid[i-1][j] = '0';
+            dfs(i-1, j, grid, row, col);
+        }
+        
+        if(i < row-1 && grid[i+1][j] == '1'){
+            grid[i+1][j] = '0';
+            dfs(i+1, j, grid, row, col);
+        }
+        
+        if(j > 0 && grid[i][j-1] == '1'){
+            grid[i][j-1] = '0';
+            dfs(i, j-1, grid, row, col);
+        }
+        
+        if(j < col-1 && grid[i][j+1] == '1'){
+            grid[i][j+1] = '0';
+            dfs(i, j+1, grid, row, col);
+        }
+        
+        return;
+    }
+};
+
