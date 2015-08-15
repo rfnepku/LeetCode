@@ -1,0 +1,72 @@
+Implement a basic calculator to evaluate a simple expression string.
+
+The expression string contains only non-negative integers, +, -, *, / operators and empty spaces . The integer division should truncate toward zero.
+
+You may assume that the given expression is always valid.
+
+Some examples:
+"3+2*2" = 7
+" 3/2 " = 1
+" 3+5 / 2 " = 5
+
+class Solution {
+public:
+    bool getNum(string& s, int& cur, int& num){
+        bool flag = false;
+        while(cur < s.size() && s[cur] == ' ')
+            cur++;
+        while(cur < s.size() && s[cur] >= '0' && s[cur] <= '9'){
+            num = num * 10 + s[cur] - '0';
+            cur++;
+            flag = true;
+        }
+        return flag;
+    }
+
+    int calc(int num1, int num2, char op){
+        if(op == '+')    return num1 + num2;
+        else if(op == '-') return num1 - num2;
+        else if(op == '*')  return num1 * num2;
+        else if(op == '/')  return num1 / num2;
+    }
+    
+    int calculate(string s) {
+        vector<int> operand_vec;
+        vector<char> operator_vec;
+        
+        int size = s.size();
+        int cur = 0;
+        while(cur < size){
+            int num = 0;
+            if(getNum(s, cur, num))  operand_vec.push_back(num);
+            
+            if(cur == size) break;
+            
+            if(s[cur] == ' '){
+                cur++;
+                continue;
+            }
+            
+            if(s[cur] == '+' || s[cur] == '-'){
+                operator_vec.push_back(s[cur]);
+                cur++;
+                continue;
+            }
+            
+            if(s[cur] == '*' || s[cur] == '/'){
+                char op = s[cur];
+                int num1 = 0;
+                getNum(s, ++cur, num1);
+                int last_index = operand_vec.size() - 1;
+                operand_vec[last_index] = calc(operand_vec[last_index], num1, op);
+                continue;
+            }
+        }
+        
+        for(int i = 0; i < operator_vec.size(); i++){
+            operand_vec[i+1] = calc(operand_vec[i], operand_vec[i+1], operator_vec[i]);
+        }
+        
+        return operand_vec[operand_vec.size()-1];
+    }
+};
