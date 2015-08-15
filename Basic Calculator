@@ -1,0 +1,85 @@
+Implement a basic calculator to evaluate a simple expression string.
+
+The expression string may contain open ( and closing parentheses ), the plus + or minus sign -, non-negative integers and empty spaces .
+
+You may assume that the given expression is always valid.
+
+Some examples:
+"1 + 1" = 2
+" 2-1 + 2 " = 3
+"(1+(4+5+2)-3)+(6+8)" = 23
+
+
+//Alway pay attention to access empty container!!!
+
+class Solution {
+public:
+    int calculate(string s) {
+        stack<string> st;
+        stack<string> st_tmp;
+        int result = 0;
+        int cur = 0;
+        s.push_back(')');
+        s.insert(0, "(");
+        int size = s.size();
+        while(cur < size){
+            if(s[cur] == ' '){   //here if use s[cur++] == ' ' very dangerous
+                cur++;
+                continue;
+            }
+            if(s[cur] == '('){
+                cur++;
+                st.push(string("("));
+                continue;
+            }
+            if(s[cur] == '+'){
+                cur++;
+                st.push(string("+"));
+                continue;
+            }
+            if(s[cur] == '-'){
+                cur++;
+                st.push(string("-"));
+                continue;
+            }
+            
+            if(s[cur] == ')'){
+                while(st.top() != "("){
+                    string tmp = st.top();
+                    st.pop();
+                    st_tmp.push(tmp);
+                }
+                st.pop();
+                if(!st_tmp.empty()){                //here may access empty stack
+                    result = stoi(st_tmp.top());
+                    st_tmp.pop();
+                }
+                
+                while(!st_tmp.empty()){
+                    if(st_tmp.top() == "+"){
+                        st_tmp.pop();
+                        result += stoi(st_tmp.top());
+                        st_tmp.pop();
+                    }
+                    else if(st_tmp.top() == "-"){//here should use else if...otherwise may access empty stack
+                        st_tmp.pop();
+                        result -= stoi(st_tmp.top());
+                        st_tmp.pop();
+                    }
+                }
+                st.push(to_string(result));//remember to push result into stack
+                cur++;
+                continue;
+            }
+            
+            int i = 1;
+            while( (cur+i) < size && s[cur+i] <= '9' && s[cur+i] >= '0')
+                i++;
+            string tmp = s.substr(cur, i);
+            st.push(tmp);
+            cur += i;
+        }
+        
+        return result;
+    }
+};
