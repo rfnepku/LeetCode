@@ -1,0 +1,34 @@
+Given an unsorted array of integers, find the length of the longest consecutive elements sequence.
+
+For example,
+Given [100, 4, 200, 1, 3, 2],
+The longest consecutive elements sequence is [1, 2, 3, 4]. Return its length: 4.
+
+Your algorithm should run in O(n) complexity.
+
+
+//When time efficient, the hash table should always comes to mind
+class Solution {
+public:
+    int longestConsecutive(vector<int>& nums) {
+        int max_length = 0;
+        std::unordered_map<int, int> mymap;
+        for(int i = 0; i < nums.size(); i++){
+            int cur = nums[i];
+            if(mymap.find(cur) == mymap.end()){
+                int left = 0, right = 0;
+                if(mymap.find(cur-1) != mymap.end())
+                    left = mymap[cur-1];
+                if(mymap.find(cur+1) != mymap.end())
+                    right = mymap[cur+1];
+                int length = left + right + 1;
+                if(length > max_length)
+                    max_length = length;
+                mymap[cur] = length;
+                mymap[cur-left] = length;
+                mymap[cur+right] = length;
+            }
+        }
+        return max_length;
+    }
+};
