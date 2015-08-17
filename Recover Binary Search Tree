@@ -1,0 +1,48 @@
+Two elements of a binary search tree (BST) are swapped by mistake.
+
+Recover the tree without changing its structure.
+
+Note:
+A solution using O(n) space is pretty straight forward. Could you devise a constant space solution?
+
+//First: one node can be smaller than than previous node or larger than next node, but it may not be the swapped node, but be influenced by swapped node
+//Second: we need to find swapped nodes, node1 and node2
+  Consider:   1 2 6 4 5 3 7 
+  there are two pairs that previous node is larger than next one  <6,4> and <5,3>
+  node1 should be the first element of the first pair and node2 should be the second element of the last pair
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    void recoverTree(TreeNode* root) {
+        if(root == NULL)    return;
+        TreeNode* pre = new TreeNode(INT_MIN);
+        TreeNode* node1 = new TreeNode(0);
+        TreeNode* node2 = new TreeNode(0);
+        bool stop = false;
+        getNode(root, node1, node2, pre, stop);
+        std::swap(node1->val, node2->val);
+        return;
+    }
+    
+    void getNode(TreeNode* root, TreeNode*& node1, TreeNode*& node2, TreeNode*& pre, bool& stop){
+        if(root == NULL)    return;
+        getNode(root->left, node1, node2, pre, stop);
+        if(root->val < pre->val){
+            if(!stop)   node1 = pre;
+            node2 = root;
+            stop = true;
+        }   
+        pre = root;
+        getNode(root->right, node1, node2, pre, stop);
+        return;
+    }
+};
