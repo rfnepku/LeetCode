@@ -1,0 +1,35 @@
+class Solution {
+public:
+    vector<string> binaryTreePaths(TreeNode* root) {
+        vector<string> result;
+        if(root == NULL)    return result;
+        string s;
+        helper(root, s, result);
+        return result;
+    }
+    
+    void helper(TreeNode* root, string s, vector<string>& result){
+        s = s + to_string(root->val) + "->";
+        if(root->left == NULL && root->right != NULL){
+            helper(root->right, s, result);
+            return;
+        }
+        
+        if(root->left != NULL && root->right == NULL){
+            helper(root->left, s, result);
+            return;
+        }
+        
+        if(root->left == NULL && root->right == NULL){
+            s.pop_back();
+            s.pop_back();
+            result.push_back(s);
+            return;
+        }
+        
+        helper(root->left, s, result);
+        helper(root->right, s, result);
+        return;
+    }
+    
+};
