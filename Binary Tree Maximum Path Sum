@@ -1,0 +1,34 @@
+Given a binary tree, find the maximum path sum.
+
+The path may start and end at any node in the tree.
+
+For example:
+Given the below binary tree,
+
+       1
+      / \
+     2   3
+     
+class Solution {
+public:
+    int maxPathSum(TreeNode* root) {
+        int max = INT_MIN;
+        helper(root, max);
+        return max;
+    }
+    
+    int helper(TreeNode* root, int& max){
+        if(root == NULL)    return 0;
+        
+        int left = helper(root->left, max);
+        int right = helper(root->right, max);
+        
+        max = std::max(left + right + root->val, max);
+        max = std::max(left + root->val, max);
+        max = std::max(right + root->val, max);
+        max = std::max(root->val, max);
+        
+        return std::max(std::max(left, right), 0) + root->val;
+    }
+    
+};
