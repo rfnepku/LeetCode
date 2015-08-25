@@ -1,0 +1,38 @@
+Sort a linked list using insertion sort.
+
+//swap the node
+class Solution {
+public:
+    ListNode* insertionSortList(ListNode* head) {
+        if(head == NULL)    return NULL;
+        ListNode* dummy = new ListNode(0);
+        dummy->next = head;
+        ListNode* preCur = head;
+        ListNode* cur = head->next;
+        while(cur != NULL){
+            ListNode* pre = dummy;
+            bool flag = false;
+            while(pre->next != cur){
+                if(cur->val > pre->next->val){
+                    pre = pre->next;
+                }
+                else{
+                    preCur->next = cur->next;
+                    cur->next = pre->next;
+                    pre->next = cur;
+                    cur = preCur->next;
+                    flag = true;
+                    break;
+                }
+            }
+            if(!flag){
+                cur = cur->next;
+                preCur = preCur->next;
+            }
+        }
+        return dummy->next;
+    }
+};
+
+//swap only val
+
