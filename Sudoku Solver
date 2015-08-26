@@ -1,0 +1,74 @@
+class Solution {
+public:
+    void solveSudoku(vector<vector<char>>& board) {
+       solve(0, 0, board);
+    }
+    
+    bool solve(int i, int j, vector<vector<char>>& board){
+        int next_i, next_j;
+        if(j < 8){
+            next_i = i;
+            next_j = j + 1;
+        }
+        if(j == 8 && i < 8){
+            next_i = i + 1;
+            next_j = 0;
+        }
+        if(j == 8 && i == 8){
+            if(board[i][j] != '.')  return isValid(i, j, board);
+            for(char k = '1'; k <= '9'; k++){
+                board[i][j] = k;
+                if(isValid(i, j, board))   return true;
+            }
+            return false;
+        }
+        
+        bool result = false;
+        for(char k = '1'; k <= '9'; k++){
+            if(board[i][j] != '.'){
+                result = solve(next_i, next_j, board);
+                return result;
+            }
+            board[i][j] = k;
+            
+            if(isValid(i, j, board) == false){ 
+                board[i][j] = '.';
+                continue;
+            }
+            if(solve(next_i, next_j, board))
+                return true;
+            board[i][j] = '.';   //should set it back 
+        }
+        return result;
+    }
+    
+    bool isValid(int i, int j, vector<vector<char>>& board){
+        std::unordered_set<char> myset;
+        for(int k = 0; k < 9; k++){
+            if(board[i][k] == '.')  continue;
+            if(myset.insert(board[i][k]).second == false)
+                return false;
+        }
+        
+        myset.clear();
+        for(int k = 0; k < 9; k++){
+            if(board[k][j] == '.')  continue;
+            if(myset.insert(board[k][j]).second == false)
+                return false;
+        }
+        
+        myset.clear();
+        int x = i / 3;
+        int y = j / 3;
+        for(int u = 0; u < 3; u++)
+            for(int v = 0; v < 3; v++){
+                int m = 3 * x + u;
+                int n = 3 * y + v;
+                if(board[m][n] == '.')  continue;
+                if(myset.insert(board[m][n]).second == false)
+                    return false;
+            }
+        
+        return true;    
+    }
+};
