@@ -1,0 +1,123 @@
+Given a string S and a string T, find the minimum window in S which will contain all the characters in T in complexity O(n).
+For example,
+S = "ADOBECODEBANC"
+T = "ABC"
+Minimum window is "BANC".
+
+Note:
+If there is no such window in S that covers all characters in T, return the emtpy string "".
+If there are multiple such windows, you are guaranteed that there will always be only one unique minimum window in S.
+
+//map[key] > 0 is different from map.find(key) != map.end(), the former will create a [key, 0] pair if not exisited
+//in for loop, wisely use break and continue
+
+class Solution {
+public:
+    string minWindow(string s, string t) {
+        string result;
+        int s_size = s.size();
+        int t_size = t.size();
+        if(s_size < t_size) return result;
+        int len = INT_MAX;
+        
+        std::unordered_map<char, int> dict;
+        std::unordered_map<char, int> record;
+        for(int i = 0; i < t_size; i++){
+            dict[t[i]]++;
+            record[t[i]]++;
+        }
+      
+        //find end
+        bool flag = false;
+        int end = 0;
+        flag = false;
+        std::unordered_map<char, int> exceed;
+        for(int i = 0; i < s_size; i++){
+            char tmp = s[i];
+            if(record.find(tmp) == record.end())
+                continue;
+            
+            if(dict.find(tmp) == dict.end()){
+                exceed[tmp]++;
+                continue;
+            }
+            
+            dict[tmp]--;
+            if(dict[tmp] == 0)
+                dict.erase(tmp);
+            
+            if(dict.empty()){
+                end = i;
+                flag = true;
+                break;
+            }
+        }
+        if(!flag)    return result;
+        
+        //find start only when exceed[s[start]] > 0  or record has no such character
+        int start = 0;
+        if(exceed.find(s[start]) != exceed.end() || record.find(s[start]) == record.end()){
+            for(int j = start; j <= end; j++){
+                char tmp = s[j];
+                if(record.find(tmp) == record.end())
+                    continue;
+                if(exceed.find(tmp) != exceed.end()){
+                    exceed[tmp]--;
+                    if(exceed[tmp] == 0)    exceed.erase(tmp);
+                    continue;
+                }
+                len = end-j+1;
+                result = s.substr(j, len);
+                start = j;
+                break;
+            }
+        }
+        else{
+            len = end - start + 1;
+            result = s.substr(start, len);
+        }
+        
+        //begin moving
+        for(int i = start; i < s_size; i++){
+            char lost = s[start];
+  
+            bool setflag = false;
+            for(int j = end+1; j < s_size; j++){
+                char tmp1 = s[j];
+                if(record.find(tmp1) == record.end())
+                    continue;
+                if(tmp1 != lost){
+                    exceed[tmp1]++;
+                    continue;
+                }
+                exceed[tmp1]++;
+				setflag = true;
+                end = j;
+                break;          //easy to forget, important
+            }
+            //if(end >= s_size)   return result;
+            //such if statement is meaningless, end will never be larger than s_size
+            if(!setflag)   return result;
+            for(int j = start; j < s_size; j++){
+                char tmp1 = s[j];
+                if(record.find(tmp1) == record.end())
+                    continue;
+                if(exceed.find(tmp1) != exceed.end()){
+                    exceed[tmp1]--;
+				    //important setence
+				    if(exceed[tmp1] == 0) exceed.erase(tmp1);
+                    continue;
+                }
+                //update len and result in this for loop 
+                if(end - j + 1 < len){
+                    len = std::min(len, end - j + 1);
+                    result = s.substr(j, len);  
+                }
+                start = j;
+                break;
+            }
+        }
+        
+        return result;
+    }
+};
