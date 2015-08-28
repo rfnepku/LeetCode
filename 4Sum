@@ -13,6 +13,9 @@ The solution set must not contain duplicate quadruplets.
 
 //time exceed. Seems like O(n2) solution. Can't figure out why...
 //C++ has no unordered_set<vector<int>> or unordered_set<vector<pair>> stuff, need to implement hash and equal class for them
+//in fact we need to use unordered_set to store all possible combinations, if use vector, we need to add:
+    if(std::find(result.begin(), result.end(), tmp) == result.end())    otherwise it will still generate duplicate combinations
+
 //A method similar to 3 sum is given
 
 class Solution {
