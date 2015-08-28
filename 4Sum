@@ -12,6 +12,9 @@ The solution set must not contain duplicate quadruplets.
 
 
 //time exceed. Seems like O(n2) solution. Can't figure out why...
+//C++ has no unordered_set<vector<int>> or unordered_set<vector<pair>> stuff, need to implement hash and equal class for them
+//A method similar to 3 sum is given
+
 class Solution {
 public:
     void addSolution(vector<pair<int, int>> vec1, vector<pair<int, int>> vec2, vector<vector<int>> result, vector<int> nums){
@@ -69,3 +72,47 @@ public:
         return result;
     }
 };
+
+
+class Solution {
+public:
+    vector<vector<int>> fourSum(vector<int>& nums, int target) {
+        vector<vector<int>> result;
+        int size = nums.size();
+        if(size < 4)    return result;
+        std::sort(nums.begin(), nums.end());
+        int i = 0;
+        while(i <= size - 4){
+            int j = i + 1;
+            while(j <= size - 3){
+                int m = j + 1;
+                int n = size - 1;
+                while(m < n){
+                    int sum = nums[i] + nums[j] + nums[m] + nums[n];
+                    if(sum < target){
+                        m++;
+                        while(m < n && nums[m] == nums[m-1])    m++;
+                    }
+                    else if(sum > target){
+                        n--;
+                        while(m < n && nums[n] == nums[n+1])    n--;
+                    }
+                    else{
+                        result.push_back({nums[i], nums[j], nums[m], nums[n]});
+                        m++;
+                        while(m < n && nums[m] == nums[m-1])    m++;
+                        n--;
+                        while(m < n && nums[n] == nums[n+1])    n--;
+                    }
+                }
+                j++;
+                while(j <= size - 3 && nums[j] == nums[j-1])    j++;
+            }
+            i++;   
+            while(i <= size - 4 && nums[i] == nums[i-1])    i++;
+        }
+        return result;
+    }
+};
+
+
