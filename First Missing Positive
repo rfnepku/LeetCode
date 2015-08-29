@@ -4,6 +4,8 @@ For example,
 Given [1,2,0] return 3,
 and [3,4,-1,1] return 2.
 
+//pay attention to the while loop in this solution. Otherwise it will not work
+
 class Solution {
 public:
     int firstMissingPositive(vector<int>& nums) {
