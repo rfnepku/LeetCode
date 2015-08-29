@@ -1,0 +1,85 @@
+//pay attention to set zeroes, at first do not set zeros of value in srow or scol, they are flag bits to guide seting zeroes!
+//no extra space solution
+class Solution {
+public:
+    void setZeroes(vector<vector<int>>& matrix) {
+        int row = matrix.size();
+        if(row == 0)    return;
+        int col = matrix[0].size();
+        int srow, scol;
+        bool flag = false;
+        for(int i = 0; i < row; i++)
+            for(int j = 0; j < col; j++){
+                if(matrix[i][j] == 0){
+                    srow = i;
+                    scol = j;
+                    flag = true;
+                    break;
+                }
+            }
+        
+        if(!flag)    return;
+        
+        for(int i = 0; i < row; i++){
+            if(i == srow)   continue;
+            for(int j = 0; j < col; j++){
+                if(j == scol)   continue;   
+                if(matrix[i][j] == 0){
+                    matrix[srow][j] = 0;
+                    matrix[i][scol] = 0; 
+                }
+            }
+        }
+        
+        for(int j = 0; j < col; j++){
+            if(matrix[srow][j] != 0)    continue;
+            for(int i = 0; i < row; i++){
+                if(i == srow || j == scol)  continue;
+                matrix[i][j] = 0;
+            }
+        }
+        
+        for(int i = 0; i < row; i++){
+            if(matrix[i][scol] != 0)    continue;
+            for(int j = 0; j < col; j++)
+                matrix[i][j] = 0;
+        }
+        
+        for(int j = 0; j < col; j++)
+            matrix[srow][j] = 0;
+        
+        for(int i = 0; i < row; i++)
+            matrix[i][scol] = 0;
+        
+        return;
+    }
+};
+
+
+class Solution {
+public:
+    void setZeroes(vector<vector<int>>& matrix) {
+        int row = matrix.size();
+        if(row == 0)    return;
+        int col = matrix[0].size();
+        std::unordered_set<int> row_set;
+        std::unordered_set<int> col_set;
+        
+        for(int i = 0; i < row; i++)
+            for(int j = 0; j < col; j++)
+                if(matrix[i][j] == 0){
+                    row_set.insert(i);
+                    col_set.insert(j);
+                }
+        
+        for(auto& row: row_set)
+            for(int j = 0; j < col; j++)
+                matrix[row][j] = 0;
+        
+        for(auto& col: col_set)
+            for(int i = 0; i < row; i++)
+                matrix[i][col] = 0;
+        
+        return;
+    }
+};
