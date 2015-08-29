@@ -39,3 +39,37 @@ public:
         return result;
     }
 };
+
+//can also work but while loop is verbose than the first solution
+class Solution {
+public:
+    struct Compare{
+        bool operator()(const Interval& a, const Interval& b){
+            return a.start < b.start;
+        }
+    };
+
+    vector<Interval> merge(vector<Interval>& intervals) {
+        int size = intervals.size();
+        vector<Interval> result;
+        if(size == 0)   return result;
+        if(size == 1)   return intervals;
+        
+        std::sort(intervals.begin(), intervals.end(), Compare());
+        
+        Interval inter = intervals[0];
+        int i = 1;
+        while(i < size){
+            while(i < size && intervals[i].start <= inter.end){
+                inter.end = std::max(intervals[i].end, inter.end);
+                i++;
+            }
+            result.push_back(inter);
+            if(i == size)   return result;
+            inter = intervals[i];
+            i++;
+        }
+        result.push_back(inter);
+        return result;
+    }
+};
