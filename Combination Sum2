@@ -1,0 +1,45 @@
+Given a collection of candidate numbers (C) and a target number (T), find all unique combinations in C where the candidate numbers sums to T.
+
+Each number in C may only be used once in the combination.
+
+Note:
+All numbers (including target) will be positive integers.
+Elements in a combination (a1, a2, … , ak) must be in non-descending order. (ie, a1 ≤ a2 ≤ … ≤ ak).
+The solution set must not contain duplicate combinations.
+For example, given candidate set 10,1,2,7,6,1,5 and target 8, 
+A solution set is: 
+[1, 7] 
+[1, 2, 5] 
+[2, 6] 
+[1, 1, 6] 
+
+//helper(candidates, target - candidates[i], combine, result, i+1);   i+1 means satisfies the requirement that every number is used only once
+//while loop removes duplicate solution. This technique is enlighted by 3 sum solution
+
+class Solution {
+public:
+    vector<vector<int>> combinationSum2(vector<int>& candidates, int target) {
+        vector<vector<int>> result;
+        if(candidates.size() == 0)  return result;
+        vector<int> combine;
+        std::sort(candidates.begin(), candidates.end());
+        helper(candidates, target, combine, result, 0);
+        return result;
+    }
+    
+    void helper(vector<int>& candidates, int target, vector<int> combine, vector<vector<int>>& result, int start){
+        if(target < 0)  return;
+        if(target == 0){
+            result.push_back(combine);
+            return;
+        }
+        
+        for(int i = start; i < candidates.size(); i++){
+            combine.push_back(candidates[i]);
+            helper(candidates, target - candidates[i], combine, result, i+1);
+            combine.pop_back();
+            while(i < candidates.size() && candidates[i] == candidates[i+1]) i++;
+        }
+        return;
+    }
+};
