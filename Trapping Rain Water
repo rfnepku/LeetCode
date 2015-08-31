@@ -1,0 +1,38 @@
+
+
+
+//two traverse solution
+class Solution {
+public:
+    int trap(vector<int>& height) {
+        int size = height.size();
+        height.push_back(1);
+        vector<int> peak;
+        if(size < 3)   return 0;
+        int left[size];
+        int right[size];
+        int max_height_index = 0;
+        
+        for(int i = 1; i < size; i++){
+            left[i] = max_height_index;
+            if(height[i] > height[max_height_index])
+                max_height_index = i;
+        }
+        
+        max_height_index = size - 1;
+        
+        for(int i = size - 2; i >= 0; i--){
+            right[i] = max_height_index;
+            if(height[i] > height[max_height_index])
+                max_height_index = i;
+        }
+        
+        int sum = 0;
+        for(int i = 1; i < size - 1; i++){
+            sum += std::max(std::min(height[left[i]], height[right[i]]) - height[i], 0);
+        }
+        
+        return sum;
+        
+    }
+};
