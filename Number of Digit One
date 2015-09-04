@@ -1,0 +1,23 @@
+class Solution {
+public:
+    int countDigitOne(int n) {
+        if(n <= 0)   return 0;
+        if(n < 10)  return 1;
+        int result = 0;
+        string s = to_string(n);
+        int highest = s[0] - '0';
+        int length = s.size();
+        int left = stoi(s.substr(1));
+        int remain = pow(10, length - 1);
+        
+        if(highest == 1){
+            result = left + 1 + countDigitOne(remain-1) + countDigitOne(left);
+        }
+        
+        else{
+            result = remain + countDigitOne(remain - 1) * highest + countDigitOne(left);
+        }
+        
+        return result;
+    }
+};
